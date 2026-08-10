@@ -5,10 +5,10 @@ const rl = readline.createInterface({ input, output });
 // 🚫 No eliminar las líneas de arriba ⬆️
 
 let systemName: string = "FUNVAL";
-let version: string = "1.0.0";
+let version: number = 1.1 ;
 let userName: string = "Harold";
 console.log(`==================================
-  ${systemName}  v${version}
+  ${systemName}  ${"v "+ version}
   ¡Bienvenido, ${userName}!
 ==================================`);
 
