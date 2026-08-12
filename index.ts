@@ -11,22 +11,55 @@ console.log(`==================================
   ${systemName}  ${"v "+ version}
   ¡Bienvenido, ${userName}!
 ==================================`);
-let tituloTareas: string[] = [];
+interface Task{
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+let tituloTareas: Task[] = [];
+let idTitle: number = 1
 let cumple: boolean = true;
+
+const addTask = (title:string) =>{
+  const newTask: Task = {
+    id: idTitle++,
+    title: title,
+    completed: false,
+    }
+  tituloTareas.push(newTask)
+  console.log(`La tarea ${title} fue agregado exitosamente`)
+}
+const listTask = () => {
+        console.log("Lista de tareas: \n")
+        console.log(`N° - titulo - estado`)
+        for(let i:number = 0; i < tituloTareas.length; i++){
+          const tasks = tituloTareas[i];
+          const estado = tasks?.completed ? "completado" : "en proceso"
+          console.log(`${tasks?.id}. ${tasks?.title} ${estado}`)
+        }
+}
+
+const removeTask = () => {
+        let eliminado = tituloTareas.pop()
+        console.log(`el titulo "${eliminado?.title}" fue eliminado exitosamente\n`)
+}
+
+
 while (cumple) {
   let answer = await rl.question("Ingrese el numero de la opcion que deseia realizar: \n1. Crear una tarea \n2. Eliminar tarea a ultima tarea agregada  \n3. ver lista de tareas\n4. Salir\n");
+  
   switch(answer){
     case "1":
       let tarea = await rl.question("Ingrese el la tarea que desea agregar: \n")
       if(tarea !=""){
-        tituloTareas.push(tarea)
+        addTask(tarea)
       }
       break
       
     case "2":
       if(tituloTareas.length > 0){
-        let eliminado = tituloTareas.pop()
-        console.log(`el titulo "${eliminado}" fue eliminado exitosamente\n`)
+        removeTask()
       }else{
         console.log("no hay tareas que eliminar, agregue tareas antes de eliminar\n")
       }
@@ -34,20 +67,15 @@ while (cumple) {
 
     case "3":
       if(tituloTareas.length != 0){
-        console.log("Lista de tareas: \n")
-        for(let i: number = 0; i < tituloTareas.length; i++){
-          console.log(`${i+1}: ${tituloTareas[i]}`)
-        }
+        listTask()
       }else{
         console.log("no hay tareas que mostrar")
       }
       break
 
     case "4":
-      if(answer == "4"){
         console.log("el programa se cerro exitosamente\n")
         cumple = false;
-      }
       break 
 
     default:
