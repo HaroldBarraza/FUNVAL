@@ -28,15 +28,33 @@ const descontruccion_todos = (tareas: Task[]): string[] =>{
     return`${id}, ${title}, ${estado}`
   })
 }
-const addTask = (title:string) =>{
-  const newTask: Task = {
-    id: idTitle++,
-    title: title,
-    completed: false,
+const addTask = async(title:string) =>{
+  try {
+    if(title === " "){
+      throw new Error("no se puede poner un titulo vacio")
     }
-  tituloTareas.push(newTask)
-  console.log(`La tarea ${title} fue agregado exitosamente`)
+    const newTask: Task = {
+      id: idTitle++,
+      title: title,
+      completed: false,
+    }
+    await saveDB(newTask)
+    tituloTareas.push(newTask)
+    
+  } catch (error) { 
+    console.error(`se necestia que igrese un titulo valido`)
+  }
 }
+const saveDB = (task:Task): Promise<void> =>{
+  return new Promise((resolve) =>{
+    console.log(`se esta agregando una nueva tareas espere porfavor ${task.title}`)
+    setTimeout(() => {
+      resolve()
+    console.log(`la tarea ${task.title} se agrego correctamente`)
+    }, 2000);
+  })
+}
+
 const listTask = () => {
   if(tituloTareas.length != 0){
     console.log("Lista de tareas: \n")
@@ -49,9 +67,18 @@ const listTask = () => {
 
   }
 
-const removeTask = () => {
-        let eliminado = tituloTareas.pop()
-        console.log(`el titulo "${eliminado?.title}" fue eliminado exitosamente\n`)
+const removeTask = async(id:number) => {
+  try {
+    if(id < tituloTareas.length && tituloTareas.length < id){
+      throw new Error("no existe ese numero de tarea")
+    }
+    
+  } catch (error) {
+    
+  }
+        let eliminado = tituloTareas.slice(id)
+        //console.log(`${}`)
+
 }
 
 const markCompleted = (numero_id: number) => {
@@ -109,17 +136,14 @@ while (cumple) {
   switch(answer){
     case "1":
       let tarea = await rl.question("Ingrese el la tarea que desea agregar: \n")
-      if(tarea !=""){
-        addTask(tarea)
-      }
+        await addTask(tarea)
       break
       
     case "2":
-      if(tituloTareas.length > 0){
-        removeTask()
-      }else{
-        console.log("no hay tareas que eliminar, agregue tareas antes de eliminar\n")
-      }
+      const eliminar = await rl.question("introdusca el N° de tarea que desea eliminar")
+      const eliminar_number = Number(eliminar)
+      removeTask(eliminar_number)
+
       break
 
     case "3":
